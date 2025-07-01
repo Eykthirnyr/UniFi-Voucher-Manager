@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% set skey = 'site_name_' + lang %}
+    <title>{{ settings[skey]|default(settings.get('site_name','')) }}</title>
+    <link rel="icon" href="{{ url_for('favicon') }}?v={{ app_version }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        :root{
+            --primary:   {{ settings.primary_color   |default('#3498db') }};
+            --secondary: {{ settings.secondary_color |default('#2c3e50') }};
+            --bg:#f4f4f4; --text:#333; --card:#fff;
+            --btn-text:#fff;
+            --logo-scale: {{ settings.logo_scale|default(100) }};
+        }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body>
+<div class="container">
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for cat,msg in messages %}
+        <li class="{{ cat }}">{{ msg }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+{% block content %}{% endblock %}
+</div>
+<footer>
+  <p>© (2025) All rights reserved Made by <a href="https://www.linkedin.com/in/clementghanemefr/">Clément GHANEME</a></p>
+  <p>Visit my website: <a href="https://clement.business/">https://clement.business/</a></p>
+  <p>Use at your own risk. Author not liable for misuse.</p>
+  <div class="app-version">v{{ app_version }}</div>
+</footer>
+
+<!-- auto-fade flash messages -->
+<script>
+const f=document.querySelector('.flashes');
+if(f){
+  const delay = f.querySelector('.voucher')
+        ? {{ settings.screen_display_seconds * 1000 }}
+        : 4000;
+  setTimeout(()=>{
+    f.style.transition='opacity .5s';
+    f.style.opacity='0';
+    setTimeout(()=>f.remove(),500);
+  }, delay);
+}
+</script>
+</body>
+</html>

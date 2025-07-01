@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block head %}
+<meta http-equiv="refresh" content="{{ retry }}">
+<style>
+.limit-card{padding:50px;text-align:center}
+.limit-time{font-size:3em;font-weight:bold;color:var(--primary-color)}
+</style>
+{% endblock %}
+{% block content %}
+<main class="form-card limit-card">
+  <h2>Too Many Requests</h2>
+  <p>Please wait before trying again.</p>
+  <div class="limit-time" id="count">{{ retry }}</div>
+  <p>The page will refresh automatically.</p>
+</main>
+<script>
+let sec={{ retry }};
+const el=document.getElementById('count');
+setInterval(()=>{if(sec>0){sec--;el.textContent=sec;}},1000);
+</script>
+{% endblock %}

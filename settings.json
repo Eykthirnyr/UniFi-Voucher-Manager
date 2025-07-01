@@ -1,0 +1,64 @@
+{
+    "site_name": "Welcome to Our Guest WiFi",
+    "site_name_en": "Welcome to Our Guest WiFi",
+    "site_name_fr": "Bienvenue sur notre WiFi invité",
+    "site_description": "TEST !",
+    "site_description_en": "TEST !",
+    "site_description_fr": "TEST !",
+    "logo_path": "Ubiquiti-logo-dark.png",
+    "logo_scale": 100,
+    "screen_display_seconds": 8,
+    "primary_color": "#1c1c1c",
+    "secondary_color": "#b32323",
+    "fields": {
+        "first_name": {
+            "display": true,
+            "mandatory": true
+        },
+        "last_name": {
+            "display": true,
+            "mandatory": true
+        },
+        "email": {
+            "display": false,
+            "mandatory": false
+        },
+        "phone": {
+            "display": false,
+            "mandatory": false
+        },
+        "reservation_id": {
+            "display": false,
+            "mandatory": false
+        }
+    },
+    "delivery_method": "Direct Display",
+    "smtp": {
+        "server": "",
+        "port": 587,
+        "user": "",
+        "password": "",
+        "use_tls": true
+    },
+    "email_subject": "Your WiFi Voucher Code",
+    "email_body_pre": "Here is your code:",
+    "email_body_post": "Enjoy your stay!",
+    "default_voucher_minutes": 1440,
+    "default_data_usage_mb": 0,
+    "default_rx_kbps": 0,
+    "default_tx_kbps": 0,
+    "default_authorized_guests": 1,
+    "cooldown": {
+        "enabled": false,
+        "seconds": 300,
+        "scope": "ip"
+    },
+    "api_key": "ABCDEF1234567890",
+    "api_url": "https://192.168.10.1/proxy/network/integration",
+    "site_id": "default",
+    "rate_limit_per_minute": 5,
+    "rate_limit_scope_minutes": 1,
+    "default_language": "en",
+    "terms_text_en": "These are the default terms of use...",
+    "terms_text_fr": "Voici les conditions par defaut."
+}

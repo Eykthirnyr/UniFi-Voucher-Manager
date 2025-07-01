@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<main class="pin-card">
+  <h2>Admin Access</h2>
+  <p>Please enter your PIN code.</p>
+  <form method="POST">
+    <label>PIN Code
+      <input type="password" name="pin" required pattern="\d{4}" title="4 digits">
+    </label>
+    <div class="submit-container">
+      <button type="submit">Login</button>
+    </div>
+  </form>
+  <p style="text-align:center;margin-top:22px">
+    <a href="{{ url_for('index') }}" class="button-link">&larr; {{ t('Back to Portal') }}</a>
+  </p>
+</main>
+{% endblock %}

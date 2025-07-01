@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<header>
+  <h1>{{ t('Terms of Use') }}</h1>
+  <a href="{{ url_for('index') }}" class="button-like">&larr; {{ t('Back to Portal') }}</a>
+</header>
+<main class="terms-content">
+  {{ (settings.terms_text_fr if lang=='fr' else settings.terms_text_en)|safe }}
+</main>
+{% endblock %}

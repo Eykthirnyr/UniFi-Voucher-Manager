@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<header>
+  <h1>Active Vouchers</h1>
+  <a href="{{ url_for('settings_page') }}" class="button-like">&larr; Back to Settings</a>
+</header>
+<div class="reservations-table">
+<table>
+  <tr>
+    <th>Code</th><th>Email</th><th>Name</th><th>Issued</th><th>Minutes</th><th>Reservation</th><th>Action</th>
+  </tr>
+  {% for v in vouchers %}
+  <tr>
+    <td>{{ v.Code }}</td>
+    <td>{{ v.Email }}</td>
+    <td>{{ v.FirstName }} {{ v.LastName }}</td>
+    <td>{{ v.Timestamp }}</td>
+    <td>{{ v.Minutes }}</td>
+    <td>{{ v.ReservationID }}</td>
+    <td>
+      <form method="post" style="display:inline">
+        <input type="hidden" name="revoke" value="{{ v.Code }}">
+        <button type="submit">Revoke</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+</div>
+{% if not vouchers %}
+<p>No active vouchers.</p>
+{% endif %}
+{% endblock %}

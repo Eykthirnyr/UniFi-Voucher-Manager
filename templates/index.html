@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header>
+    {% if whitelisted %}
+        <a href="{{ url_for('pin_entry') }}" class="settings-button">⚙️ Settings</a>
+    {% endif %}
+    <div class="lang-links">
+        <a href="{{ url_for('set_lang', lang='en') }}">EN</a> |
+        <a href="{{ url_for('set_lang', lang='fr') }}">FR</a>
+    </div>
+    <img src="{{ url_for('logo') }}?v={{ app_version }}" alt="Site Logo" class="logo">
+    {% set skn = 'site_name_' + lang %}
+    {% set sdn = 'site_description_' + lang %}
+    <h1>{{ settings[skn]|default(settings.get('site_name','')) | safe }}</h1>
+    <p>{{ settings[sdn]|default(settings.get('site_description','')) | safe }}</p>
+</header>
+
+<main class="form-card">
+    <form method="POST" action="{{ url_for('index') }}">
+        {% if settings.fields.first_name.display %}
+        <div class="form-group">
+            <label for="first_name">{{ t('First Name') }} {% if settings.fields.first_name.mandatory %}*{% endif %}</label>
+            <input type="text" id="first_name" name="first_name" value="{{ form.first_name or '' }}" {% if settings.fields.first_name.mandatory %}required{% endif %}>
+        </div>
+        {% endif %}
+
+        {% if settings.fields.last_name.display %}
+        <div class="form-group">
+            <label for="last_name">{{ t('Last Name') }} {% if settings.fields.last_name.mandatory %}*{% endif %}</label>
+            <input type="text" id="last_name" name="last_name" value="{{ form.last_name or '' }}" {% if settings.fields.last_name.mandatory %}required{% endif %}>
+        </div>
+        {% endif %}
+
+        {% if settings.fields.email.display %}
+        <div class="form-group">
+            <label for="email">{{ t('Email') }} {% if settings.fields.email.mandatory %}*{% endif %}</label>
+            <input type="email" id="email" name="email" value="{{ form.email or '' }}" {% if settings.fields.email.mandatory %}required{% endif %}>
+        </div>
+        {% endif %}
+
+        {% if settings.fields.phone.display %}
+        <div class="form-group">
+            <label for="phone">{{ t('Phone Number') }} {% if settings.fields.phone.mandatory %}*{% endif %}</label>
+            <input type="tel" id="phone" name="phone" value="{{ form.phone or '' }}" {% if settings.fields.phone.mandatory %}required{% endif %}>
+        </div>
+        {% endif %}
+
+         {% if settings.fields.reservation_id.display %}
+        <div class="form-group">
+            <label for="reservation_id">{{ t('Reservation ID') }} {% if settings.fields.reservation_id.mandatory %}*{% endif %}</label>
+            <input type="text" id="reservation_id" name="reservation_id" value="{{ form.reservation_id or '' }}" {% if settings.fields.reservation_id.mandatory %}required{% endif %}>
+        </div>
+        {% endif %}
+
+        <div class="form-group terms"> {# <<< Changed: Removed nested label, using flexbox now #}
+            <input type="checkbox" id="terms" name="terms" required>
+            <label for="terms">{{ t('I accept the Terms of Use') }} <a href="{{ url_for('terms') }}" target="_blank">{{ t('Terms of Use') }}</a> *</label>
+        </div>
+
+        <div class="submit-container"> {# <<< Added container for centering #}
+            <button type="submit">{{ t('Get WiFi Access') }}</button>
+        </div>
+    </form>
+</main>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block head %}
+<meta http-equiv="refresh" content="{{ remaining }}">
+<style>
+    .cooldown-card { text-align: center; padding: 50px; }
+    .cooldown-time { font-size: 3em; font-weight: bold; color: var(--primary-color); }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="form-card cooldown-card">
+    <h2>Please Wait</h2>
+    <p>You have recently requested access. Please wait before trying again.</p>
+    <div class="cooldown-time">{{ remaining }}</div>
+    <p>This page will refresh automatically when the cooldown ends.</p>
+</main>
+{% endblock %}

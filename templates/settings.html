@@ -1,0 +1,469 @@
+{% extends "base.html" %}
+
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% endblock %}
+
+
+
+{% block content %}
+<header>
+  <h1>Admin Settings</h1>
+  <a href="{{ url_for('logout') }}" class="settings-button">Logout</a>
+</header>
+
+
+
+<form method="POST" enctype="multipart/form-data" action="{{ url_for('settings_page') }}">
+
+  <!-- ===============================================================
+       APPEARANCE
+       =============================================================== -->
+  <div class="settings-card">
+    <h3>Appearance</h3>
+
+    <label for="site_name_en">Site Name (EN)</label>
+    <input id="site_name_en" type="text" name="site_name_en" value="{{ settings.site_name_en }}">
+
+    <label for="site_name_fr">Site Name (FR)</label>
+    <input id="site_name_fr" type="text" name="site_name_fr" value="{{ settings.site_name_fr }}">
+
+    <label for="site_description_en">Description (EN)</label>
+    <textarea id="site_description_en" name="site_description_en">{{ settings.site_description_en }}</textarea>
+
+    <label for="site_description_fr">Description (FR)</label>
+    <textarea id="site_description_fr" name="site_description_fr">{{ settings.site_description_fr }}</textarea>
+
+    <label>Default Language
+      <select name="default_language">
+        {% for code,name in LANGS.items() %}
+          <option value="{{ code }}" {% if settings.default_language==code %}selected{% endif %}>{{ name }}</option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <label for="primary_color">Primary Colour</label>
+    <input id="primary_color" type="color" name="primary_color" value="{{ settings.primary_color }}">
+
+    <label for="secondary_color">Secondary Colour</label>
+    <input id="secondary_color" type="color" name="secondary_color" value="{{ settings.secondary_color }}">
+
+    <div style="margin-top:18px">
+      <label>Upload Logo
+        <input type="file" name="logo_upload" accept="image/*">
+      </label>
+      <small>Current:</small>
+      <img id="logo-preview" src="{{ url_for('logo') }}?v={{ app_version }}" alt="Logo" style="height:40px;vertical-align:middle">
+    </div>
+
+    <label for="logo_scale">Logo Size</label>
+    <input id="logo_scale" type="range" name="logo_scale" min="50" max="150" value="{{ settings.logo_scale|default(100) }}">
+    <small id="logo-scale-display">{{ settings.logo_scale|default(100) }}%</small>
+
+    <div style="margin-top:12px">
+      <label>Upload Favicon (.ico)
+        <input type="file" name="favicon_upload" accept=".ico">
+      </label>
+      <small>Current:</small>
+      <img id="favicon-preview" src="{{ url_for('favicon') }}?v={{ app_version }}" alt="Favicon" style="height:24px;vertical-align:middle">
+    </div>
+  </div>
+
+
+
+  <!-- ===============================================================
+       FORM FIELDS
+       =============================================================== -->
+  <div class="settings-card">
+    <h3>Form Fields</h3>
+
+    {% for field, meta in settings.fields.items() %}
+      <div class="field-config">
+        <span>{{ field.replace('_', ' ').title() }}</span>
+
+        <label>
+          <input type="checkbox" name="field_{{ field }}_display"
+                 {% if meta.display %}checked{% endif %}>
+          Display
+        </label>
+
+        <label>
+          <input type="checkbox" name="field_{{ field }}_mandatory"
+                 {% if meta.mandatory %}checked{% endif %}>
+          Mandatory
+        </label>
+      </div>
+    {% endfor %}
+  </div>
+
+
+
+  <!-- ===============================================================
+       VOUCHER DELIVERY
+       =============================================================== -->
+  <div class="settings-card">
+    <h3>Voucher Delivery</h3>
+
+    <label>
+      <input type="radio" name="delivery_method" value="Direct Display"
+             {% if settings.delivery_method == 'Direct Display' %}checked{% endif %}>
+      On-screen
+    </label>
+
+    <label>
+      <input type="radio" name="delivery_method" value="SMTP"
+             {% if settings.delivery_method == 'SMTP' %}checked{% endif %}>
+      SMTP E-mail
+    </label>
+
+    <div id="screen-settings" style="margin-top:14px">
+      <label>Display seconds
+        <input type="number" name="screen_display_seconds" value="{{ settings.screen_display_seconds }}">
+      </label>
+    </div>
+
+
+
+    <!-- ── E-mail-specific panel ── -->
+    <div id="email-settings" style="margin-top:20px">
+
+      <label>E-mail Subject
+        <input type="text" name="email_subject" value="{{ settings.email_subject }}">
+      </label>
+
+      <label>Body (before code)
+        <textarea name="email_body_pre">{{ settings.email_body_pre }}</textarea>
+      </label>
+
+      <label>Body (after code)
+        <textarea name="email_body_post">{{ settings.email_body_post }}</textarea>
+      </label>
+
+
+
+      <h4 style="margin:18px 0 10px">SMTP Server</h4>
+
+      <label>Host
+        <input type="text" name="smtp_server" value="{{ settings.smtp.server }}">
+      </label>
+
+      <label>Port
+        <input type="number" name="smtp_port" value="{{ settings.smtp.port }}">
+      </label>
+
+      <label>User
+        <input type="text" name="smtp_user" value="{{ settings.smtp.user }}">
+      </label>
+
+      <label>Password
+        <input type="password" name="smtp_password"
+               value="{% if settings.smtp.password %}********{% endif %}">
+      </label>
+
+      <label>
+        <input type="checkbox" name="smtp_tls"
+               {% if settings.smtp.use_tls %}checked{% endif %}>
+        Use TLS
+      </label>
+
+
+
+      <input type="email" name="smtp_test_addr"
+             placeholder="Send test to…" style="margin-top:14px">
+
+      <button type="submit" name="smtp_test" value="1" style="margin-top:14px" formnovalidate>
+        Send SMTP Test
+      </button>
+    </div>
+  </div>
+
+
+
+  <!-- ===============================================================
+       UNIFI API
+       =============================================================== -->
+  <div class="settings-card">
+    <h3>UniFi&nbsp;API</h3>
+
+    <label title="It should be https://<your-console-local-ip>/proxy/network/integration/v1/sites">
+      API URL
+      <input type="text" name="api_url" value="{{ settings.api_url }}">
+    </label>
+
+    <label>Site ID <span class="optional-note">(optional)</span>
+      <input type="text" name="site_id" value="{{ settings.site_id }}">
+    </label>
+
+    <label title="Generate an API key from your UniFi console Control-plane/Integrations">
+      API Key
+      <input type="text" name="api_key" value="{{ settings.api_key }}">
+    </label>
+
+    <div class="settings-button-group">
+      <button class="settings-button-item" type="submit" name="api_test" value="1" formnovalidate>Test API</button>
+      <button class="settings-button-item" type="submit" name="fetch_site_id" value="1" formnovalidate>Fetch Site ID</button>
+    </div>
+  </div>
+
+
+  <!-- ===============================================================
+       VOUCHER DEFAULTS
+       =============================================================== -->
+  <div class="settings-card">
+    <h3>Voucher Defaults</h3>
+
+    <label title="How long each voucher stays valid after first use">
+      Time Limit (minutes)
+      <input type="number" name="default_voucher_minutes" value="{{ settings.default_voucher_minutes }}">
+    </label>
+
+    <label title="Maximum data a guest can transfer before the voucher expires">
+      Data Limit (MB)
+      <input type="number" name="default_data_usage_mb" value="{{ settings.default_data_usage_mb }}">
+    </label>
+
+    <label title="Download speed cap for each voucher user">
+      Rx Limit (Kbps)
+      <input type="number" name="default_rx_kbps" value="{{ settings.default_rx_kbps }}">
+    </label>
+
+    <label title="Upload speed cap for each voucher user">
+      Tx Limit (Kbps)
+      <input type="number" name="default_tx_kbps" value="{{ settings.default_tx_kbps }}">
+    </label>
+
+    <label title="Number of guests allowed to use the same voucher">
+      Guest Limit
+      <input type="number" name="default_authorized_guests" value="{{ settings.default_authorized_guests }}">
+    </label>
+  </div>
+
+
+
+  <!-- ===============================================================
+       SECURITY & COOLDOWN
+       =============================================================== -->
+  <div class="settings-card">
+    <h3>Security &amp; Cooldown</h3>
+
+    <label title="When enabled, a visitor must wait before requesting another voucher.">
+      <input type="checkbox" name="cooldown_enabled"
+             {% if settings.cooldown.enabled %}checked{% endif %}>
+      Enable Cooldown
+    </label>
+
+    <label title="Exact wait time in seconds that visitors must observe between voucher requests.">
+      Cooldown Seconds
+      <input type="number" name="cooldown_seconds" value="{{ settings.cooldown.seconds }}">
+    </label>
+
+    <label title="Maximum HTTP requests a single IP can make during the time window below. Requests above this limit are blocked.">
+      Rate-limit: Requests
+      <input type="number" name="rate_limit_per_minute" value="{{ settings.rate_limit_per_minute }}">
+    </label>
+
+    <label title="Duration, in minutes, of the sliding window used for the request limit above.">
+      Rate-limit: Window (minutes)
+      <input type="number" name="rate_limit_scope_minutes" value="{{ settings.rate_limit_scope_minutes }}">
+    </label>
+  </div>
+
+
+
+  <!-- ===============================================================
+       RESERVATIONS
+       =============================================================== -->
+  <div class="settings-card" id="reservations-card" style="display:{% if not settings.fields.reservation_id.display %}none{% endif %}">
+    <h3>Reservations</h3>
+
+    <div class="reservations-table">
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Start</th><th>End</th><th>Min</th><th>DataMB</th><th>Rx</th><th>Tx</th><th>Guests</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+          {% for r in reservations %}
+            <tr>
+              <td>{{ r.ReservationID }}</td>
+              <td>{{ r.StartDate }}</td>
+              <td>{{ r.EndDate }}</td>
+              <td>{{ r.Minutes }}</td>
+              <td>{{ r.DataMB }}</td>
+              <td>{{ r.RxKbps }}</td>
+              <td>{{ r.TxKbps }}</td>
+              <td>{{ r.GuestLimit }}</td>
+              <td>
+                <button type="submit" name="del_reservation" value="{{ r.ReservationID }}" onclick="return confirm('Delete this reservation?')" formnovalidate>✖</button>
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="9">No reservations.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+
+
+    <h4 style="margin:16px 0 10px">Add Reservation</h4>
+
+    <label>ID <input type="text" name="res_id" required></label>
+    <label>Start <input type="text" class="datepicker" name="start_date" required></label>
+    <label>End  <input type="text" class="datepicker" name="end_date" required></label>
+    <label title="How long each voucher stays valid after first use">Minutes <input type="number" name="res_minutes" placeholder="default"></label>
+    <label title="Maximum data a guest can transfer before the voucher expires">Data MB <input type="number" name="res_data_mb" placeholder="default"></label>
+    <label title="Download speed cap for each voucher user">Rx Kbps <input type="number" name="res_rx" placeholder="default"></label>
+    <label title="Upload speed cap for each voucher user">Tx Kbps <input type="number" name="res_tx" placeholder="default"></label>
+    <label title="Number of guests allowed to use the same voucher">Guests <input type="number" name="res_guests" placeholder="default"></label>
+
+    <div class="settings-button-group">
+      <button class="settings-button-item" type="submit" name="add_reservation" value="1">Add</button>
+    </div>
+
+
+
+    <hr style="margin:24px 0">
+
+    <h4>Import / Sample CSV</h4>
+
+    <div class="settings-button-group">
+      <label class="settings-button-item button-like" style="cursor:pointer">
+        Import CSV
+        <input type="file" name="csv_file" accept=".csv" style="display:none" onchange="if(confirm('Overwrite reservations, clear log and remove all vouchers?')){document.getElementById('importflag').value=1; this.form.submit();}else{this.value='';}">
+      </label>
+      <input type="hidden" name="import_csv" id="importflag" value="">
+      <a href="{{ url_for('download_csv_example') }}" class="settings-button-item button-like">
+        Download Sample
+      </a>
+      <button class="settings-button-item" type="submit" name="refresh_reservations" value="1" formnovalidate title="Reload reservations.csv from disk">Refresh Table</button>
+    </div>
+  </div>
+
+  <div class="settings-card">
+    <h3>Active Vouchers</h3>
+    <a href="{{ url_for('manage_vouchers') }}" class="button-like">View / Revoke</a>
+  </div>
+
+  <!-- ===============================================================
+       TERMS
+       =============================================================== -->
+  <div class="settings-card">
+    <h3>Terms of Use Text</h3>
+    <label>English
+      <textarea name="terms_text_en" style="min-height:120px">{{ settings.terms_text_en }}</textarea>
+    </label>
+    <label>Français
+      <textarea name="terms_text_fr" style="min-height:120px">{{ settings.terms_text_fr }}</textarea>
+    </label>
+  </div>
+
+
+
+  <!-- =============================================================== -->
+  <button type="submit" class="apply-button" formnovalidate>Apply All Settings</button>
+</form>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  flatpickr(".datepicker", {dateFormat: "d/m/Y"});
+
+  // Show / hide SMTP block
+  function toggleEmail(){
+    const blk = document.getElementById('email-settings');
+    const smtp = document.querySelector('input[value="SMTP"]');
+    blk.style.display = smtp.checked ? 'block' : 'none';
+    const scr = document.getElementById('screen-settings');
+    const ons = document.querySelector('input[value="Direct Display"]');
+    if(scr && ons){
+      scr.style.display = ons.checked ? 'block' : 'none';
+    }
+  }
+  document.querySelectorAll('input[name="delivery_method"]')
+          .forEach(r => r.addEventListener('change', toggleEmail));
+  toggleEmail();
+
+  function toggleReservations(){
+    const card = document.getElementById('reservations-card');
+    const chk = document.querySelector('input[name="field_reservation_id_display"]');
+    if(card && chk){
+      card.style.display = chk.checked ? 'block' : 'none';
+    }
+  }
+  const resChk = document.querySelector('input[name="field_reservation_id_display"]');
+  if(resChk){
+    resChk.addEventListener('change', toggleReservations);
+    toggleReservations();
+  }
+
+  function enforceFieldRules(){
+    document.querySelectorAll('.field-config').forEach(row => {
+      const disp = row.querySelector('input[name$="_display"]');
+      const mand = row.querySelector('input[name$="_mandatory"]');
+      if(!disp || !mand) return;
+      function sync(){ if(mand.checked) disp.checked = true; if(!disp.checked) mand.checked = false; }
+      mand.addEventListener('change', sync);
+      disp.addEventListener('change', sync);
+      sync();
+    });
+    const resDisp = document.querySelector('input[name="field_reservation_id_display"]');
+    if(resDisp){
+      resDisp.addEventListener('change', toggleReservations);
+      toggleReservations();
+    }
+  }
+  enforceFieldRules();
+
+  function adjustEmailField(){
+    const smtpRadio = document.querySelector('input[value="SMTP"]');
+    const disp = document.querySelector('input[name="field_email_display"]');
+    const mand = document.querySelector('input[name="field_email_mandatory"]');
+    if(smtpRadio && disp && mand){
+      smtpRadio.addEventListener('change', ()=>{
+        if(smtpRadio.checked){
+          disp.checked = true;
+          mand.checked = true;
+        }
+      });
+      if(smtpRadio.checked){
+        disp.checked = true;
+        mand.checked = true;
+      }
+    }
+  }
+  adjustEmailField();
+
+  // Show chosen file name for uploads
+  document.querySelectorAll('input[type=file]').forEach(inp =>{
+    inp.addEventListener('change', e =>{
+      const lbl = e.target.parentElement;
+      if(lbl && e.target.files.length){
+        lbl.firstChild.textContent = "File: " + e.target.files[0].name;
+        if(e.target.name === 'logo_upload'){
+          const img = document.getElementById('logo-preview');
+          if(img) img.src = URL.createObjectURL(e.target.files[0]);
+        }
+        if(e.target.name === 'favicon_upload'){
+          const img = document.getElementById('favicon-preview');
+          if(img) img.src = URL.createObjectURL(e.target.files[0]);
+        }
+      }
+    });
+  });
+
+  const scaleSlider = document.getElementById('logo_scale');
+  if(scaleSlider){
+    const preview = document.getElementById('logo-preview');
+    const disp = document.getElementById('logo-scale-display');
+    const update = () => {
+      const val = parseInt(scaleSlider.value);
+      if(preview) preview.style.height = (40 * val / 100) + 'px';
+      if(disp) disp.textContent = val + '%';
+    };
+    scaleSlider.addEventListener('input', update);
+    update();
+  }
+</script>
+{% endblock %}
