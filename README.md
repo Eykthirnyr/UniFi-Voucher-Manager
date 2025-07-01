@@ -2,6 +2,8 @@
 
 A single-file Flask application that issues UniFi guest WiFi vouchers. Users request a code from a self-service portal while administrators configure options through a PIN-protected page. The application aims to be easy to deploy on a small server or appliance.
 
+![screencapture-127-0-0-1-8080-2025-07-01-12_34_52](https://github.com/user-attachments/assets/1e828ae4-c36b-416b-a688-a6a0331ccd6a)
+
 ---
 
 ## Key Features
@@ -37,6 +39,9 @@ A single-file Flask application that issues UniFi guest WiFi vouchers. Users req
 - The admin area requires both a valid PIN and a request originating from a whitelisted IP address.
 - Expired vouchers are periodically cleaned up from the UniFi controller to avoid lingering access.
 - Basic validation ensures mandatory fields are provided and that email addresses look valid.
+
+![screencapture-127-0-0-1-8080-admin-settings-2025-07-01-12_34_37](https://github.com/user-attachments/assets/1e16c714-31af-4e13-9f05-07d73c5fa184)
+
 
 ---
 
@@ -85,9 +90,5 @@ All edits are saved to disk immediately.
 
 MAC addresses are looked up from UniFi if not supplied in the request headers.
 
----
 
-## License
-
-This project is released under the MIT License. Use at your own risk.
 
