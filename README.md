@@ -55,6 +55,9 @@ A single-file Flask application that issues UniFi guest WiFi vouchers. Users req
 - A reservation can override voucher parameters such as minutes or bandwidth.
 - Expired reservations are hidden from the table and any issued vouchers are removed from UniFi.
 
+![image](https://github.com/user-attachments/assets/5d853b3b-c892-48e0-bf95-0946a186e722)
+
+
 ### Logging
 - `voucher_log.csv` records every voucher attempt with IP, MAC (if available), success flag and user details.
 - `app.log` keeps application events and rotates automatically when the file grows beyond 10,000 lines.
@@ -65,8 +68,12 @@ A single-file Flask application that issues UniFi guest WiFi vouchers. Users req
 ![Screenshot_6](https://github.com/user-attachments/assets/91f36e49-2da2-4018-a524-5a5885268143)
 
 
-![screencapture-127-0-0-1-8080-terms-2025-07-02-10_54_29](https://github.com/user-attachments/assets/f4ee7821-f2dc-4306-b602-778eb157dbec)
+![screencapture-127-0-0-1-8080-terms-2025-07-02-10_54_29](https://github.com/user-attachments/assets/c81a9e0b-8d0a-4a0a-a756-6b8d85a9ed72)
 
+Note that all user input fields intended for text or titles in the settings can be written in raw HTML to allow for more customization, such as adding images, formatting text, and so on.
+See the following example in the ToU:
+
+![Screenshot_8](https://github.com/user-attachments/assets/b8af15eb-a0e2-485a-8e82-50958dc10ddd)
 
 ![Screenshot_7](https://github.com/user-attachments/assets/cfd20a98-13e4-43ec-97eb-1286b0271333)
 
@@ -77,7 +84,6 @@ A single-file Flask application that issues UniFi guest WiFi vouchers. Users req
 - The admin area requires both a valid PIN and a request originating from a whitelisted IP address.
 - Expired vouchers are periodically cleaned up from the UniFi controller to avoid lingering access.
 - Basic validation ensures mandatory fields are provided and that email addresses look valid.
-
 
 ![screencapture-127-0-0-1-8080-admin-settings-2025-07-02-10_09_40](https://github.com/user-attachments/assets/c3c7d666-7c17-4a73-818b-097d6ade43f3)
 
