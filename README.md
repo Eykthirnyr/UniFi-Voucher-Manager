@@ -95,7 +95,7 @@ See the following example in the ToU:
 1. **Install Python 3.8+** on the host running the application.
 2. Clone this repository and run `python app.py` to start. Missing dependencies are installed automatically on the first launch.
 3. Browse to `http://<server>:8080` for the public portal. Use `/admin/pin` from a whitelisted IP to access the settings page.
-4. Have an API key from your local accessible Unifi Console :
+4. Have an API key from your local Unifi Console :
 
 ![Screenshot_10](https://github.com/user-attachments/assets/b618048e-928e-4878-8a29-df0d01d1b4eb)
 
