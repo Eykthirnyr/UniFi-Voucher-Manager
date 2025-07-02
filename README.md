@@ -144,6 +144,10 @@ All edits are saved to disk immediately.
 ---
 
 ## License
-This project is licensed under the [Clément GHANEME Software License v1.0](./LICENSE.md).  
-Free for personal and professional use. Redistribution, modification, and commercial use are prohibited.
+This project is licensed under the [Clément GHANEME Software License v1.1](./LICENSE.md).  
+Free for personal use and non-profit associations only.  
+**Professional, commercial, or organizational use is prohibited without prior permission.**  
+Redistribution, modification, and commercial use are not allowed.  
+For other uses, please contact the author at [contact@clement.business](mailto:contact@clement.business).
+
 
