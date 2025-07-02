@@ -85,9 +85,7 @@ See the following example in the ToU:
 - The admin area requires both a valid PIN and a request originating from a whitelisted IP address.
 - Expired vouchers are periodically cleaned up from the UniFi controller to avoid lingering access.
 - Basic validation ensures mandatory fields are provided and that email addresses look valid.
-
-![screencapture-127-0-0-1-8080-admin-settings-2025-07-02-10_09_40](https://github.com/user-attachments/assets/c3c7d666-7c17-4a73-818b-097d6ade43f3)
-
+  
 ---
 
 ## Getting Started
@@ -105,7 +103,11 @@ See the following example in the ToU:
 ![Screenshot_7](https://github.com/user-attachments/assets/d18bc2aa-1f9a-4ae1-bce7-cc5536978a95)
 
 7. Setup config.ini for your needs.
-8. In the web interface, go into the settings, connect and test API link to your console in there and customize the fields for your company.
+8. In the web interface, go into the settings, connect and test API link to your console in there and customize the fields for your company :
+
+![screencapture-127--10_09_40](https://github.com/user-attachments/assets/e972ec7d-e59d-41e1-b75b-87c2847e6354)
+
+9. Done !
 
 ---
 
