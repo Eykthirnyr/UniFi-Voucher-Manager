@@ -25,8 +25,6 @@ A single-file Flask application that issues UniFi guest WiFi vouchers. Users req
 
 ![Screenshot_3](https://github.com/user-attachments/assets/9c88874e-fa90-4dda-9fed-f024940cfa95)
 
-![Screenshot_1](https://github.com/user-attachments/assets/ce20ab83-d841-4c07-a8dd-71fd5003c0d4)
-
 - Configure default voucher duration, data limits, bandwidth and guest count.
 - Enable/disable form fields (first/last name, email, phone, reservation ID).
 - Import or export reservation data from CSV.
