@@ -26,7 +26,7 @@ You are granted the following rights:
 You are not permitted to:
 
 - Modify the Software or create derivative works based on it.
-- Redistribute the Software, whether modified or unmodified, including as part of another product or service.
+- Redistribute the Software, whether modified or unmodified, including as part of another product.
 - Commercialize the Software or to monetize it.
 ---
 
