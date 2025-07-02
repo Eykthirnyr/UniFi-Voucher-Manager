@@ -1,13 +1,13 @@
-# Clément GHANEME Software License v1.0
+# ClÃ©ment GHANEME Software License v1.0
 
 **Date**: July 2, 2025  
-**Author**: Clément GHANEME
+**Author**: ClÃ©ment GHANEME
 
 ---
 
 ## 1. Purpose and Scope
 
-This license applies to the software project contained in this repository (hereinafter "the Software"), created by Clément GHANEME during his personal time, and not under the name, property, or commission of any organization or employer.
+This license applies to the software project contained in this repository (hereinafter "the Software"), created by ClÃ©ment GHANEME during his personal time, and not under the name, property, or commission of any organization or employer.
 
 ---
 
@@ -27,14 +27,12 @@ You are not permitted to:
 
 - Modify the Software or create derivative works based on it.
 - Redistribute the Software, whether modified or unmodified, including as part of another product or service.
-- Commercialize the Software or use it as part of any paid, monetized, or revenue-generating activity.
-- Publicly deploy the Software or its derivatives (e.g., on SaaS platforms, public servers, or client-facing applications) without explicit, written authorization from the author.
-
+- Commercialize the Software or to monetize it.
 ---
 
 ## 4. Ownership and Credits
 
-The Software remains the exclusive intellectual property of Clément GHANEME.
+The Software remains the exclusive intellectual property of ClÃ©ment GHANEME.
 
 - You may not remove or alter any authorship, copyright, or attribution.
 - You must not falsely claim ownership or authorship of the Software.
@@ -51,8 +49,8 @@ The author is not liable for any damage, data loss, or issues arising from the u
 
 ## 6. Contact
 
-For permissions, feedback, or contributions, please contact Clément GHANEME via this repository’s issue tracker or any method listed in the project’s documentation.
+For permissions, feedback, or contributions, please contact ClÃ©ment GHANEME via this repositoryâ€™s issue tracker or any method listed in the projectâ€™s documentation.
 
 ---
 
-© 2025 Clément GHANEME. All rights reserved.
+Â© 2025 ClÃ©ment GHANEME. All rights reserved.
