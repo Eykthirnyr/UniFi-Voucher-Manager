@@ -143,7 +143,7 @@ All edits are saved to disk immediately.
 
 ---
 
-
-
-
+## License
+This project is licensed under the [Clément GHANEME Software License v1.0](./LICENSE.md).  
+Free for personal and professional use. Redistribution, modification, and commercial use are prohibited.
 
