@@ -53,12 +53,15 @@ A single-file Flask application that issues UniFi guest WiFi vouchers. Users req
 - A reservation can override voucher parameters such as minutes or bandwidth.
 - Expired reservations are hidden from the table and any issued vouchers are removed from UniFi.
 
-![image](https://github.com/user-attachments/assets/5d853b3b-c892-48e0-bf95-0946a186e722)
-
+![image](https://github.com/user-attachments/assets/c73f4575-2e92-466d-b43b-d44e3cc59a26)
 
 ### Logging
 - `voucher_log.csv` records every voucher attempt with IP, MAC (if available), success flag and user details.
 - `app.log` keeps application events and rotates automatically when the file grows beyond 10,000 lines.
+
+![image](https://github.com/user-attachments/assets/7c1ee38c-2b0a-46fb-92a9-e2c6fc1be9e8)
+
+![image](https://github.com/user-attachments/assets/dc335ca4-bb60-42e6-a219-8e05eadf8c05)
 
 ### Localization
 - Public portal and terms page available in English and French. Text for both languages is editable.
@@ -84,7 +87,6 @@ See the following example in the ToU:
 - Basic validation ensures mandatory fields are provided and that email addresses look valid.
 
 ![screencapture-127-0-0-1-8080-admin-settings-2025-07-02-10_09_40](https://github.com/user-attachments/assets/c3c7d666-7c17-4a73-818b-097d6ade43f3)
-
 
 ---
 
