@@ -141,12 +141,7 @@ All edits are saved to disk immediately.
 
 ---
 
-## Logs
 
-- `voucher_log.csv` – history of voucher generation attempts.
-- `app.log` – rotating application log. Old logs are archived automatically when the file exceeds ~10k lines.
-
-MAC addresses are looked up from UniFi if not supplied in the request headers.
 
 
 
