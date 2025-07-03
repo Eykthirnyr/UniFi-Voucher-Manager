@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<main class="pin-card">
+  <h2>Docker Initial Setup</h2>
+  <p>These settings are final in this Docker version.</p>
+  <p>Your current IP is {{ client_ip }}.</p>
+  <form method="POST">
+    <input type="hidden" name="force" value="{{ force or '' }}">
+    <label>Whitelisted IPs (comma separated)
+      <input type="text" name="whitelisted_ips" placeholder="e.g. 192.168.1.100, 2001:db8::1" value="{{ ips|default('') }}" required>
+      <button type="button" id="add-my-ip" data-ip="{{ client_ip }}">Add my IP ({{ client_ip }})</button>
+    </label>
+    <label>Admin PIN (4 digits)
+      <input type="password" name="pin" pattern="\d{4}" placeholder="e.g. 1234" value="{{ pin|default('') }}" required>
+    </label>
+    <div class="submit-container">
+      <button type="submit" id="confirm" disabled>Confirm ({{ countdown }})</button>
+    </div>
+  </form>
+</main>
+<script>
+let s={{ countdown }};
+const btn=document.getElementById('confirm');
+function tick(){
+  if(s<=0){btn.disabled=false;btn.textContent='Confirm';}
+  else{btn.textContent='Confirm ('+s+')';s--;setTimeout(tick,1000);} }
+tick();
+const btnIp=document.getElementById('add-my-ip');
+if(btnIp){
+  btnIp.addEventListener('click',()=>{
+    const field=document.querySelector('input[name="whitelisted_ips"]');
+    const ip=btnIp.dataset.ip;
+    const items=field.value.split(',').map(i=>i.trim()).filter(Boolean);
+    if(!items.includes(ip)){
+      items.push(ip);
+      field.value=items.join(', ');
+    }
+  });
+}
+</script>
+{% endblock %}
