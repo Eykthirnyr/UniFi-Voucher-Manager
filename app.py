@@ -5,7 +5,7 @@ UniFi Voucher Portal – single-file Flask application
 """
 APP_VERSION = "1.0.5"
 
-import os, sys, json, csv, re, subprocess, configparser, logging
+import os, sys, json, csv, re, subprocess, configparser, logging, ipaddress
 from datetime import datetime, timedelta
 from functools import wraps
 from logging.handlers import RotatingFileHandler
@@ -637,13 +637,26 @@ def docker_setup():
         abort(404)
     if os.path.exists(DOCKER_INIT_FLAG):
         return redirect(url_for('index'))
+    ips = ''
+    pin = ''
+    force = request.form.get('force')
     if request.method == 'POST':
         ips = request.form.get('whitelisted_ips', '').strip()
         pin = request.form.get('pin', '').strip()
+        invalid = []
+        if ips:
+            for item in [i.strip() for i in ips.split(',') if i.strip()]:
+                try:
+                    ipaddress.ip_address(item)
+                except ValueError:
+                    invalid.append(item)
         if not ips:
             flash('Please enter at least one IP', 'danger')
         elif not re.fullmatch(r"\d{4}", pin):
             flash('PIN must be 4 digits', 'danger')
+        elif invalid and not force:
+            flash('Some IPs seem invalid: ' + ', '.join(invalid) + '. Submit again to confirm anyway.', 'warning')
+            force = '1'
         else:
             cfg = load_cfg()
             cfg['General']['whitelisted_ips'] = ips
@@ -652,7 +665,9 @@ def docker_setup():
             open(DOCKER_INIT_FLAG, 'w').write('done')
             flash('Configuration saved', 'success')
             return redirect(url_for('index'))
-    return render_template('docker_setup.html', settings=load_stg(), config=load_cfg())
+    countdown = 45 if not force else 0
+    return render_template('docker_setup.html', settings=load_stg(), config=load_cfg(),
+                           ips=ips, pin=pin, force=force, countdown=countdown)
 
 # ───────────────────────── Guest index page ──────────────────────────
 @app.route('/', methods=['GET','POST'])

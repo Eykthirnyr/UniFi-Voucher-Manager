@@ -4,22 +4,24 @@
   <h2>Docker Initial Setup</h2>
   <p>These settings are final in this Docker version.</p>
   <form method="POST">
+    <input type="hidden" name="force" value="{{ force or '' }}">
     <label>Whitelisted IPs (comma separated)
-      <input type="text" name="whitelisted_ips" required>
+      <input type="text" name="whitelisted_ips" placeholder="e.g. 192.168.1.100, 2001:db8::1" value="{{ ips|default('') }}" required>
     </label>
     <label>Admin PIN (4 digits)
-      <input type="password" name="pin" pattern="\d{4}" required>
+      <input type="password" name="pin" pattern="\d{4}" placeholder="e.g. 1234" value="{{ pin|default('') }}" required>
     </label>
     <div class="submit-container">
-      <button type="submit" id="confirm" disabled>Confirm (5)</button>
+      <button type="submit" id="confirm" disabled>Confirm ({{ countdown }})</button>
     </div>
   </form>
 </main>
 <script>
-let s=5,btn=document.getElementById('confirm');
+let s={{ countdown }};
+const btn=document.getElementById('confirm');
 function tick(){
-  s--;if(s<=0){btn.disabled=false;btn.textContent='Confirm';}
-  else{btn.textContent='Confirm ('+s+')';setTimeout(tick,1000);} }
-setTimeout(tick,1000);
+  if(s<=0){btn.disabled=false;btn.textContent='Confirm';}
+  else{btn.textContent='Confirm ('+s+')';s--;setTimeout(tick,1000);} }
+tick();
 </script>
 {% endblock %}
