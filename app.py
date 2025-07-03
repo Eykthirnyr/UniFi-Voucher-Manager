@@ -37,6 +37,9 @@ LOG = os.path.join(APP, 'app.log')
 CSV = os.path.join(APP, 'reservations.csv')
 VLOG = os.path.join(APP, 'voucher_log.csv')
 
+RUNNING_DOCKER = os.path.exists('/.dockerenv') or os.environ.get('RUN_IN_DOCKER')
+DOCKER_INIT_FLAG = os.path.join(APP, '.docker_initialized')
+
 TPL = os.path.join(APP, 'templates')
 STA = os.path.join(APP, 'static')
 LOGOS = os.path.join(STA, 'logos')
@@ -336,6 +339,14 @@ def log_voucher(success, code='', method='', email='', first='', last='', phone=
             ''
         ])
 
+# ───────────────────────── Docker first-run redirect ─────────────---
+@app.before_request
+def docker_setup_redirect():
+    if RUNNING_DOCKER and not os.path.exists(DOCKER_INIT_FLAG):
+        allowed = {'docker_setup', 'static', 'favicon', 'logo'}
+        if request.endpoint not in allowed:
+            return redirect(url_for('docker_setup'))
+
 # ───────────────────────── SMTP helper ─────────────────────────────--
 def send_email(to_addr, subject, body):
     stg = load_stg()
@@ -618,6 +629,30 @@ def terms():
     lang = session.get('lang', stg.get('default_language', 'en'))
     return render_template('terms.html',
                            settings=stg, config=load_cfg(), lang=lang)
+
+# ───────────────────────── Docker first boot setup ───────────────────
+@app.route('/docker_setup', methods=['GET','POST'])
+def docker_setup():
+    if not RUNNING_DOCKER:
+        abort(404)
+    if os.path.exists(DOCKER_INIT_FLAG):
+        return redirect(url_for('index'))
+    if request.method == 'POST':
+        ips = request.form.get('whitelisted_ips', '').strip()
+        pin = request.form.get('pin', '').strip()
+        if not ips:
+            flash('Please enter at least one IP', 'danger')
+        elif not re.fullmatch(r"\d{4}", pin):
+            flash('PIN must be 4 digits', 'danger')
+        else:
+            cfg = load_cfg()
+            cfg['General']['whitelisted_ips'] = ips
+            cfg['General']['pin_code'] = pin
+            save_cfg(cfg)
+            open(DOCKER_INIT_FLAG, 'w').write('done')
+            flash('Configuration saved', 'success')
+            return redirect(url_for('index'))
+    return render_template('docker_setup.html', settings=load_stg(), config=load_cfg())
 
 # ───────────────────────── Guest index page ──────────────────────────
 @app.route('/', methods=['GET','POST'])
