@@ -1,4 +1,4 @@
-# UniFi Network Voucher Manager
+# UniFi Network Voucher Manager - DOCKER Version
 
 A single-file Flask application that issues UniFi guest WiFi vouchers. Users request a code from a self-service portal while administrators configure options through a PIN-protected page. The application aims to be easy to deploy on a small server or appliance.
 
@@ -112,6 +112,26 @@ See the following example in the ToU:
 9. Done !
 
 ---
+
+## Docker Deployment
+
+The application automatically detects when it runs inside a Docker container. On
+the very first start it shows a short form asking for the IP addresses allowed
+to access the admin section and for a 4‑digit PIN code. Once confirmed, these
+values are written to `config.ini` and the setup screen will not appear again.
+
+1. Build or obtain a Docker image containing this repository.
+2. Run the container and expose port `8080`:
+
+   ```bash
+   docker run -d -p 8080:8080 --name unifi-vm -v "%cd%\config.ini:/app/config.ini" -v "%cd%\settings.json:/app/settings.json" unifi-voucher-manager
+   ```
+
+   Mount the project directory as a volume if you wish to persist configuration
+   and log files across restarts.
+
+3. Browse to `http://<host>:8080` to complete the one‑time Docker setup. After
+   that, the admin portal is reachable at `/admin/pin` from a whitelisted IP.
 
 ## Configuration
 
